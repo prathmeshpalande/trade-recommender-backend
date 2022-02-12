@@ -10,11 +10,15 @@ db = client['uaot-recommender']
 @app.get('/watchlist')
 def get_watchlist(username: str):
     watchlist = db['watchlist']
-    _watchlist = watchlist.find({'username': username}).next()
-    del _watchlist['_id']
-    print(_watchlist)
+    _watchlist = watchlist.find({'username': username})
+    _watchlist_ = []
+    for stock in _watchlist:
+        del stock['_id']
+        _watchlist_.append(stock)
+    # del _watchlist['_id']
+    print(_watchlist_)
     # return {'watchlist': _watchlist}
-    return _watchlist
+    return _watchlist_
 
 @app.get('/recommendations')
 def get_recommendations(stock: str, interval: int):
