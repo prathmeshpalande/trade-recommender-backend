@@ -7,6 +7,7 @@ app = FastAPI()
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['uaot-recommender']
+
 @app.get('/watchlist')
 def get_watchlist(username: str):
     watchlist = db['watchlist']
@@ -19,6 +20,33 @@ def get_watchlist(username: str):
     print(_watchlist_)
     # return {'watchlist': _watchlist}
     return _watchlist_
+
+@app.post('/watchlist')
+def add_watchlist(username: str, symbol: str, interval: int):
+    watchlist = db['watchlist']
+    current_watch = watchlist.find_one({
+        'username': username,
+        'watch': {
+            'name': symbol,
+            'interval': interval
+        }
+    })
+    if not current_watch:
+        watchlist.insert_one({
+            'username': username,
+            'watch': {
+                'name': symbol,
+                'interval': interval
+            }
+        })
+        return {
+            'status': 'success',
+        }
+    else:
+        return {
+            'status': 'failure',
+            'message': 'instrument already exists in watchlist'
+        }
 
 @app.get('/recommendations')
 def get_recommendations(stock: str, interval: int):
