@@ -30,3 +30,7 @@ def get_recommendations(stock: str, interval: int):
         _recommendations_.append(recommendation)
     print(_recommendations_)
     return _recommendations_
+
+@app.get('/status/market')
+def get_market_status():
+    return 'OFF'
