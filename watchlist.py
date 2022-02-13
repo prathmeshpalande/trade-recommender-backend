@@ -34,3 +34,13 @@ def get_recommendations(stock: str, interval: int):
 @app.get('/status/market')
 def get_market_status():
     return 'OFF'
+
+@app.get('/instruments')
+def get_instruments():
+    instruments = db['instruments']
+    _instruments = instruments.find()
+    _instruments_ = []
+    for instrument in _instruments:
+        del instrument['_id']
+        _instruments_.append(instrument)
+    return _instruments_
